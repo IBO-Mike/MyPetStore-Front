@@ -1,0 +1,37 @@
+.product-detail {
+  display: grid;
+  gap: 20px;
+}
+
+.product-summary {
+  padding: 28px;
+}
+
+.sku-list {
+  display: grid;
+  gap: 12px;
+}
+
+.sku-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.sku-card__attrs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  .sku-card {
+    grid-template-columns: 1fr;
+  }
+}

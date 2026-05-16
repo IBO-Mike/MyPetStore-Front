@@ -1,0 +1,8 @@
+.order-status {
+  width: 150px;
+}
+
+.order-link {
+  color: var(--color-primary);
+  font-weight: 800;
+}
