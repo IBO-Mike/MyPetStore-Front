@@ -9,6 +9,21 @@
   grid-column: 1 / -1;
 }
 
+.auth-page--single {
+  max-width: 520px;
+  grid-template-columns: 1fr;
+}
+
+.auth-page__switch {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.auth-page__switch a {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
 @media (max-width: 760px) {
   .auth-page {
     grid-template-columns: 1fr;

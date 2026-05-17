@@ -7,6 +7,7 @@ const pages = [
   'index',
   'product',
   'login',
+  'register',
   'user',
   'cart',
   'order',

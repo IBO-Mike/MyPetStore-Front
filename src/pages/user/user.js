@@ -13,6 +13,7 @@ if (!requireAuth()) {
 
 const notice = qs('[data-notice]');
 const profileForm = qs('[data-profile-form]');
+const MAX_PASSWORD_LENGTH = 25;
 
 const profileFields = [
   ['firstName', '名'],
@@ -72,8 +73,9 @@ profileForm.addEventListener('submit', async (event) => {
 
 qs('[data-password-form]').addEventListener('submit', async (event) => {
   event.preventDefault();
+  const form = event.currentTarget;
   const button = event.submitter;
-  const formData = new FormData(event.currentTarget);
+  const formData = new FormData(form);
   const payload = {
     oldPassword: formData.get('oldPassword').trim(),
     newPassword: formData.get('newPassword').trim(),
@@ -85,10 +87,15 @@ qs('[data-password-form]').addEventListener('submit', async (event) => {
     return;
   }
 
+  if (payload.newPassword.length > MAX_PASSWORD_LENGTH) {
+    showNotice(notice, `密码不能超过 ${MAX_PASSWORD_LENGTH} 位`, 'error');
+    return;
+  }
+
   setLoading(button, true, '保存中...');
   try {
     await api.post('/account/change-password', payload);
-    event.currentTarget.reset();
+    form.reset();
     showNotice(notice, '密码已更新', 'success');
   } catch (error) {
     showNotice(notice, error.message, 'error');

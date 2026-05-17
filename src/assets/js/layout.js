@@ -8,7 +8,8 @@ const navItems = [
   { href: '/cart.html', label: '购物车', auth: true },
   { href: '/order.html', label: '我的订单', auth: true },
   { href: '/user.html', label: '个人中心', auth: true },
-  { href: '/login.html', label: '登录 / 注册', guest: true },
+  { href: '/login.html', label: '登录', guest: true },
+  { href: '/register.html', label: '注册', guest: true },
 ];
 
 function isActive(href) {

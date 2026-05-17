@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登录注册 - MyPetStore</title>
+    <title>登录 - MyPetStore</title>
   </head>
   <body>
     <div class="site-shell" data-app-shell>
       <main class="main">
-        <div class="container auth-page">
+        <div class="container auth-page auth-page--single">
           <div class="notice" data-notice></div>
           <section class="panel">
             <div class="panel__header"><h1>登录</h1></div>
@@ -19,31 +19,14 @@
               </label>
               <label class="form-group form-group--full">
                 <span class="form-label">密码</span>
-                <input class="form-control" name="password" type="password" autocomplete="current-password" required />
+                <input class="form-control" name="password" type="password" autocomplete="current-password" maxlength="25" required />
               </label>
               <div class="form-group form-group--full">
                 <button class="btn btn-primary" type="submit">登录</button>
               </div>
-            </form>
-          </section>
-          <section class="panel">
-            <div class="panel__header"><h1>注册</h1></div>
-            <form class="panel__body form-grid" data-register-form>
-              <label class="form-group form-group--full">
-                <span class="form-label">用户名</span>
-                <input class="form-control" name="username" autocomplete="username" required />
-              </label>
-              <label class="form-group form-group--full">
-                <span class="form-label">密码</span>
-                <input class="form-control" name="password" type="password" autocomplete="new-password" required />
-              </label>
-              <label class="form-group form-group--full">
-                <span class="form-label">确认密码</span>
-                <input class="form-control" name="confirmPassword" type="password" autocomplete="new-password" required />
-              </label>
-              <div class="form-group form-group--full">
-                <button class="btn btn-secondary" type="submit">创建账户</button>
-              </div>
+              <p class="auth-page__switch form-group--full">
+                还没有账户？<a href="/register.html">创建账户</a>
+              </p>
             </form>
           </section>
         </div>

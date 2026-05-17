@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>注册 - MyPetStore</title>
+  </head>
+  <body>
+    <div class="site-shell" data-app-shell>
+      <main class="main">
+        <div class="container register-page">
+          <div class="page-head">
+            <div>
+              <h1>创建账户</h1>
+              <p>填写账户、联系和收货信息。</p>
+            </div>
+            <a class="btn btn-secondary" href="/login.html">返回登录</a>
+          </div>
+          <div class="notice" data-notice></div>
+          <section class="panel">
+            <form class="panel__body form-grid" data-register-form>
+              <label class="form-group">
+                <span class="form-label">用户名</span>
+                <input class="form-control" name="username" autocomplete="username" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">邮箱</span>
+                <input class="form-control" name="email" type="email" autocomplete="email" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">密码</span>
+                <input class="form-control" name="password" type="password" autocomplete="new-password" maxlength="25" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">确认密码</span>
+                <input class="form-control" name="confirmPassword" type="password" autocomplete="new-password" maxlength="25" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">名</span>
+                <input class="form-control" name="firstName" autocomplete="given-name" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">姓</span>
+                <input class="form-control" name="lastName" autocomplete="family-name" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">电话</span>
+                <input class="form-control" name="phone" autocomplete="tel" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">语言偏好</span>
+                <select class="form-control" name="languagePreference">
+                  <option value="English">English</option>
+                  <option value="Chinese">Chinese</option>
+                </select>
+              </label>
+              <label class="form-group form-group--full">
+                <span class="form-label">地址 1</span>
+                <input class="form-control" name="address1" autocomplete="address-line1" maxlength="80" required />
+              </label>
+              <label class="form-group form-group--full">
+                <span class="form-label">地址 2</span>
+                <input class="form-control" name="address2" autocomplete="address-line2" maxlength="40" />
+              </label>
+              <label class="form-group">
+                <span class="form-label">城市</span>
+                <input class="form-control" name="city" autocomplete="address-level2" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">州/省</span>
+                <input class="form-control" name="state" autocomplete="address-level1" maxlength="80" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">邮编</span>
+                <input class="form-control" name="zip" autocomplete="postal-code" maxlength="20" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">国家</span>
+                <input class="form-control" name="country" autocomplete="country-name" maxlength="20" required />
+              </label>
+              <label class="form-group">
+                <span class="form-label">偏好分类</span>
+                <select class="form-control" name="favoriteCategory">
+                  <option value="DOGS">Dogs</option>
+                  <option value="CATS">Cats</option>
+                  <option value="FISH">Fish</option>
+                  <option value="BIRDS">Birds</option>
+                  <option value="REPTILES">Reptiles</option>
+                </select>
+              </label>
+              <div class="form-group">
+                <span class="form-label">&nbsp;</span>
+                <button class="btn btn-primary" type="submit">创建账户</button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

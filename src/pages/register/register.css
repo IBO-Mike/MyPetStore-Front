@@ -1,0 +1,13 @@
+.register-page {
+  max-width: 980px;
+}
+
+.register-page .page-head {
+  align-items: flex-end;
+}
+
+@media (max-width: 760px) {
+  .register-page .page-head {
+    align-items: stretch;
+  }
+}
