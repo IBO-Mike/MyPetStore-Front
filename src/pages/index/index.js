@@ -30,6 +30,45 @@ function getSamplePrice(product) {
   return min === max ? formatPrice(min) : `${formatPrice(min)} - ${formatPrice(max)}`;
 }
 
+function getProductImage(productId, categoryId) {
+  const imageMap = {
+    'AV-CB-01': 'bird1',
+    'AV-SB-02': 'bird2',
+    'FI-SW-01': 'fish1',
+    'FI-SW-02': 'fish2',
+    'FI-FW-01': 'fish3',
+    'FI-FW-02': 'fish4',
+    'K9-BD-01': 'dog1',
+    'K9-CW-01': 'dog2',
+    'K9-DL-01': 'dog3',
+    'K9-RT-01': 'dog4',
+    'K9-RT-02': 'dog5',
+    'K9-PO-02': 'dog6',
+    'FL-DSH-01': 'cat1',
+    'FL-DLH-02': 'cat2',
+    'RP-LI-02': 'lizard1',
+    'RP-SN-01': 'snake1',
+  };
+  
+  const defaultImageMap = {
+    'BIRDS': 'bird1',
+    'CATS': 'cat1',
+    'DOGS': 'dog1',
+    'FISH': 'fish1',
+    'REPTILES': 'lizard1',
+  };
+  
+  const imageName = imageMap[productId] || defaultImageMap[categoryId] || 'dog1';
+  return `/src/images/${imageName}.gif`;
+}
+
+function stripHtmlTags(html) {
+  if (!html) return '';
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+}
+
 function renderProducts(pageResult) {
   state.totalPages = pageResult.totalPages;
   listMeta.textContent = `共 ${pageResult.total} 个结果，第 ${pageResult.page} / ${pageResult.totalPages || 1} 页`;
@@ -41,17 +80,24 @@ function renderProducts(pageResult) {
 
   productList.innerHTML = pageResult.items
     .map(
-      (product) => `<article class="card product-card">
+      (product) => {
+        const categoryId = product.categoryId || 'CATALOG';
+        const productId = product.productId || '';
+        const imageUrl = getProductImage(productId, categoryId);
+        const description = stripHtmlTags(product.description);
+        return `<article class="card product-card">
         <div>
-          <span class="badge">${product.categoryId || 'CATALOG'}</span>
+          <span class="badge">${categoryId}</span>
+          <img src="${imageUrl}" alt="${product.name}" onerror="this.style.display='none'" />
           <h3>${product.name}</h3>
-          <p>${product.description || '暂无商品描述'}</p>
+          <p>${description || '暂无商品描述'}</p>
         </div>
         <div class="product-card__meta">
           <span class="price">${getSamplePrice(product)}</span>
           <a class="btn btn-primary" href="/product.html?productId=${encodeURIComponent(product.productId)}">查看</a>
         </div>
-      </article>`,
+      </article>`;
+      },
     )
     .join('');
 }

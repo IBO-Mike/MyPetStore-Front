@@ -12,6 +12,7 @@ const pages = [
   'cart',
   'order',
   'order-detail',
+  'compare',
 ];
 
 const entries = pages.reduce((result, page) => {
@@ -81,9 +82,15 @@ module.exports = (env, argv) => {
       }),
     ],
     devServer: {
-      static: {
-        directory: path.resolve(__dirname, 'dist'),
-      },
+      static: [
+        {
+          directory: path.resolve(__dirname, 'dist'),
+        },
+        {
+          directory: path.resolve(__dirname, 'src'),
+          publicPath: '/src',
+        },
+      ],
       port: 3000,
       historyApiFallback: false,
       hot: true,

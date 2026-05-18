@@ -94,8 +94,36 @@ export const api = {
   put(path, data) {
     return request(path, { method: 'PUT', data });
   },
-  delete(path) {
-    return request(path, { method: 'DELETE' });
+  delete(path, params) {
+    return request(path, { method: 'DELETE', params });
+  },
+  favorites: {
+    add(userId, productId) {
+      return api.post('/favorites', { userId, productId });
+    },
+    remove(id) {
+      return api.delete(`/favorites/${id}`);
+    },
+    getByUser(userId) {
+      return api.get(`/favorites/users/${userId}`);
+    },
+  },
+  compares: {
+    add(userId, productId) {
+      return api.post('/compares', { userId, productId });
+    },
+    remove(id) {
+      return api.delete(`/compares/${id}`);
+    },
+    removeByProductId(userId, productId) {
+      return api.delete(`/compares/products/${productId}`, { params: { userId } });
+    },
+    clear(userId) {
+      return api.delete('/compares', { params: { userId } });
+    },
+    getByUser(userId) {
+      return api.get(`/compares/users/${userId}`);
+    },
   },
 };
 
