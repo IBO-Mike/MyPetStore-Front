@@ -5,14 +5,16 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const pages = [
   'index',
+  'catalog',
   'product',
   'login',
   'register',
   'user',
   'cart',
+  'favorites',
+  'compare',
   'order',
   'order-detail',
-  'compare',
 ];
 
 const entries = pages.reduce((result, page) => {
@@ -91,6 +93,7 @@ module.exports = (env, argv) => {
           publicPath: '/src',
         },
       ],
+      host: '127.0.0.1',
       port: 3000,
       historyApiFallback: false,
       hot: true,

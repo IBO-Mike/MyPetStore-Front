@@ -102,10 +102,10 @@ export const api = {
       return api.post('/favorites', { userId, productId });
     },
     remove(id) {
-      return api.delete(`/favorites/${id}`);
+      return api.delete(`/favorites/${encodeURIComponent(id)}`);
     },
     getByUser(userId) {
-      return api.get(`/favorites/users/${userId}`);
+      return api.get(`/favorites/users/${encodeURIComponent(userId)}`);
     },
   },
   compares: {
@@ -113,16 +113,16 @@ export const api = {
       return api.post('/compares', { userId, productId });
     },
     remove(id) {
-      return api.delete(`/compares/${id}`);
+      return api.delete(`/compares/${encodeURIComponent(id)}`);
     },
     removeByProductId(userId, productId) {
-      return api.delete(`/compares/products/${productId}`, { params: { userId } });
+      return api.delete(`/compares/products/${encodeURIComponent(productId)}`, { userId });
     },
     clear(userId) {
-      return api.delete('/compares', { params: { userId } });
+      return api.delete('/compares', { userId });
     },
     getByUser(userId) {
-      return api.get(`/compares/users/${userId}`);
+      return api.get(`/compares/users/${encodeURIComponent(userId)}`);
     },
   },
 };

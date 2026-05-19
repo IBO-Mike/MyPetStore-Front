@@ -1,11 +1,18 @@
 import '../css/base.css';
 import '../css/layout.css';
 import '../css/components.css';
+import '../css/island-transition.css';
+import { installAnimalCursor } from './animal-cursor';
 import { isLoggedIn, logout, getUserInfo } from './auth';
+
+const syncAnimalCursor = installAnimalCursor();
 
 const navItems = [
   { href: '/', label: '首页' },
+  { href: '/catalog.html', label: '商品列表' },
   { href: '/cart.html', label: '购物车', auth: true },
+  { href: '/favorites.html', label: '我的收藏', auth: true },
+  { href: '/compare.html', label: '商品对比', auth: true },
   { href: '/order.html', label: '我的订单', auth: true },
   { href: '/user.html', label: '个人中心', auth: true },
   { href: '/login.html', label: '登录', guest: true },
@@ -25,6 +32,7 @@ export function renderLayout(activeLabel = '') {
   if (!shell) {
     return;
   }
+  syncAnimalCursor();
 
   const loggedIn = isLoggedIn();
   const user = getUserInfo();
@@ -45,7 +53,10 @@ export function renderLayout(activeLabel = '') {
     'afterbegin',
     `<header class="site-header">
       <div class="container site-header__inner">
-        <a class="site-header__brand" href="/">MyPetStore</a>
+        <div class="site-brand-group">
+          <a class="site-header__brand" href="/">MyPetStore</a>
+          <div class="site-time" aria-label="当前时间" data-site-time></div>
+        </div>
         <nav class="site-nav" aria-label="主导航">
           ${navHtml}
           ${loggedIn ? `<span class="badge">${user?.username || '已登录'}</span><button class="site-nav__button" type="button" data-logout>退出</button>` : ''}
@@ -66,4 +77,21 @@ export function renderLayout(activeLabel = '') {
     await logout();
     window.location.href = '/login.html';
   });
+
+  const timeEl = document.querySelector('[data-site-time]');
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function renderTime() {
+    if (!timeEl) return;
+    const now = new Date();
+    timeEl.innerHTML = `<span class="site-time__date">
+      <span class="site-time__weekday">${weekdays[now.getDay()]}</span>
+      <span class="site-time__monthday">${months[now.getMonth()]} ${now.getDate()}</span>
+    </span>
+    <span class="site-time__clock">${String(now.getHours()).padStart(2, '0')}<span class="site-time__colon">:</span>${String(now.getMinutes()).padStart(2, '0')}</span>`;
+  }
+
+  renderTime();
+  window.setInterval(renderTime, 1000);
 }

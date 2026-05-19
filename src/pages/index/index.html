@@ -1,48 +1,34 @@
 <!doctype html>
-<html lang="zh-CN">
+<html class="animal-cursor" lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MyPetStore 商品列表</title>
+    <title>MyPetStore 启动页</title>
   </head>
-  <body>
-    <div class="site-shell" data-app-shell>
-      <main class="main">
-        <div class="container">
-          <section class="catalog-hero">
-            <div>
-              <h1>宠物商品目录</h1>
-              <p>按分类浏览商品，或直接搜索你需要的宠物用品。</p>
-            </div>
-            <form class="catalog-search" data-search-form>
-              <input class="form-control" name="keyword" type="search" placeholder="搜索商品关键词" />
-              <button class="btn btn-primary" type="submit">搜索</button>
-            </form>
-          </section>
-          <div class="notice" data-notice></div>
-          <section class="catalog-layout">
-            <aside class="panel catalog-sidebar">
-              <div class="panel__header">
-                <h2>分类</h2>
-              </div>
-              <div class="catalog-categories" data-category-list></div>
-            </aside>
-            <section>
-              <div class="page-head">
-                <div>
-                  <h2 data-list-title>全部商品</h2>
-                  <p data-list-meta>正在加载商品...</p>
-                </div>
-                <div class="page-head__actions">
-                  <button class="btn btn-secondary" type="button" data-prev-page>上一页</button>
-                  <button class="btn btn-secondary" type="button" data-next-page>下一页</button>
-                </div>
-              </div>
-              <div class="product-grid" data-product-list></div>
-            </section>
-          </section>
+  <body class="animal-cursor">
+    <main class="startup-page animal-cursor" aria-label="MyPetStore 启动页">
+      <div class="startup-pattern" aria-hidden="true"></div>
+      <section class="startup-hero">
+        <div class="startup-copy">
+          <h1 class="startup-title">
+            MyPet<br />
+            Store <span>v1.0</span>
+          </h1>
+          <p class="startup-subtitle">
+            治愈风格的 MyPetStore 前端，浏览商品、管理购物车和订单都更轻松温暖。
+          </p>
+          <a class="startup-action" href="/catalog.html" data-start-button>
+            开始使用 <span aria-hidden="true">→</span>
+          </a>
         </div>
-      </main>
-    </div>
+
+        <div class="pet-scene" aria-hidden="true">
+          <span class="pet-bubble pet-bubble--cats">Cats</span>
+          <span class="pet-bubble pet-bubble--dogs">Dogs</span>
+          <span class="pet-bubble pet-bubble--fish">Fish</span>
+          <div class="animal-art"></div>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

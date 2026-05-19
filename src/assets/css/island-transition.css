@@ -1,0 +1,272 @@
+@property --mask-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.island-transition {
+  --mask-r: 0px;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-right: 20px;
+  padding-bottom: 20px;
+  pointer-events: none;
+  overflow: hidden;
+  background: #000000;
+  opacity: 0;
+}
+
+.island-transition.is-visible {
+  opacity: 1;
+}
+
+.island-transition__curtain {
+  position: absolute;
+  inset: 0;
+  background: #000000;
+}
+
+.island-transition--departure {
+  transition: opacity 180ms ease-out;
+}
+
+.island-transition--arrival {
+  opacity: 1;
+}
+
+.island-transition--arrival.is-opening {
+  -webkit-mask-image: radial-gradient(
+    circle at center,
+    transparent var(--mask-r),
+    rgba(0, 0, 0, 0.24) calc(var(--mask-r) + 34px),
+    #000000 calc(var(--mask-r) + 92px)
+  );
+  mask-image: radial-gradient(
+    circle at center,
+    transparent var(--mask-r),
+    rgba(0, 0, 0, 0.24) calc(var(--mask-r) + 34px),
+    #000000 calc(var(--mask-r) + 92px)
+  );
+  animation: island-store-open 1780ms linear 260ms forwards;
+}
+
+.island-transition.is-finishing {
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+
+.island-transition__island {
+  position: relative;
+  z-index: 1;
+  width: min(180px, 24vw);
+  opacity: 0;
+  transform: translate(0, 0);
+  transition: opacity 160ms ease-out;
+}
+
+.island-transition.is-visible .island-transition__island {
+  opacity: 1;
+}
+
+.island-transition__svg,
+.island-transition__image {
+  display: block;
+  width: 100%;
+}
+
+.island-transition__image,
+.island-transition__svg .illustration {
+  display: block;
+  width: 100%;
+  max-width: 180px;
+  max-height: 200px;
+}
+
+.island-transition__svg .illustration {
+  overflow: visible;
+}
+
+.island-transition__svg #whole-island {
+  animation: island-original-float 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.island-transition__svg #tree {
+  animation: island-original-tree 2s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.island-transition__svg #leaf1,
+.island-transition__svg #leaf2,
+.island-transition__svg #leaf3,
+.island-transition__svg #leaf4,
+.island-transition__svg #leaf5 {
+  animation: island-original-leaves 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+}
+
+.island-transition__svg #leaf1 {
+  transform-origin: center right;
+}
+
+.island-transition__svg #leaf2 {
+  animation-name: island-original-leaf-two;
+  transform-origin: bottom right;
+}
+
+.island-transition__svg #leaf3 {
+  animation-name: island-original-leaf-three;
+  transform-origin: bottom center;
+}
+
+.island-transition__svg #leaf4 {
+  animation-name: island-original-leaf-four;
+  transform-origin: bottom left;
+}
+
+.island-transition__svg #leaf5 {
+  transform-origin: top left;
+}
+
+.island-transition__svg #water-circle1 {
+  animation: island-original-water-one 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.island-transition__svg #water-circle2 {
+  animation: island-original-water-two 1s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.island-transition__svg #tri-wave1 {
+  animation: island-original-wave-one 6s linear infinite;
+}
+
+.island-transition__svg #tri-wave2 {
+  animation: island-original-wave-two 6s linear infinite;
+}
+
+.island-transition__svg #sine-wave-group {
+  animation: island-original-sine 2s linear infinite;
+}
+
+@keyframes island-store-open {
+  to {
+    --mask-r: 145vmax;
+  }
+}
+
+@keyframes island-original-float {
+  to {
+    transform: translateY(-15px) rotate(1deg);
+  }
+}
+
+@keyframes island-original-tree {
+  from {
+    transform: rotate(-6deg);
+  }
+
+  to {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes island-original-leaves {
+  to {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes island-original-leaf-two {
+  from {
+    transform: rotate(3deg);
+  }
+
+  to {
+    transform: translate(-3px, -3px) rotate(-4deg);
+  }
+}
+
+@keyframes island-original-leaf-three {
+  to {
+    transform: rotate(-6deg);
+  }
+}
+
+@keyframes island-original-leaf-four {
+  to {
+    transform: translateY(-3px) rotate(-6deg);
+  }
+}
+
+@keyframes island-original-water-one {
+  to {
+    transform: scaleX(1.2);
+  }
+}
+
+@keyframes island-original-water-two {
+  from {
+    transform: scaleX(1.2);
+  }
+
+  to {
+    transform: scaleX(0.8);
+  }
+}
+
+@keyframes island-original-wave-one {
+  from {
+    transform: translateX(-60px);
+  }
+
+  to {
+    transform: translateX(20px);
+  }
+}
+
+@keyframes island-original-wave-two {
+  from {
+    transform: translateX(-10px);
+  }
+
+  to {
+    transform: translateX(50px);
+  }
+}
+
+@keyframes island-original-sine {
+  to {
+    transform: translateX(75px);
+  }
+}
+
+@media (max-width: 620px) {
+  .island-transition {
+    padding-right: 16px;
+    padding-bottom: 16px;
+  }
+
+  .island-transition__island {
+    width: 150px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .island-transition,
+  .island-transition *,
+  .island-transition *::before,
+  .island-transition *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

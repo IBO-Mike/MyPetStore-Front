@@ -1,145 +1,156 @@
 import '../../assets/js/layout';
 import { renderLayout } from '../../assets/js/layout';
 import { api } from '../../assets/js/api';
-import { requireAuth, getUserInfo } from '../../assets/js/auth';
+import { getUserInfo, requireAuth } from '../../assets/js/auth';
 import { formatPrice, qs, showNotice, setLoading } from '../../assets/js/utils';
 import './compare.css';
 
 renderLayout('商品对比');
 
-if (!requireAuth()) {
-  throw new Error('Authentication required');
-}
-
 const content = qs('[data-compare-content]');
 const meta = qs('[data-compare-meta]');
 const notice = qs('[data-notice]');
+const clearButton = qs('[data-clear-compare]');
 
-function stripHtmlTags(html) {
-  if (!html) return '';
-  const div = document.createElement('div');
-  div.innerHTML = html;
-  return div.textContent || div.innerText || '';
+let compareEntries = [];
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
-function getProductMinPrice(product) {
-  const items = product.items || [];
-  if (items.length === 0) return '-';
-  const prices = items.map(item => item.listPrice).filter(price => price != null);
-  if (prices.length === 0) return '-';
-  const minPrice = Math.min(...prices);
-  return formatPrice(minPrice);
+function stripHtml(value = '') {
+  const template = document.createElement('template');
+  template.innerHTML = value;
+  return template.content.textContent.trim();
 }
 
-function renderCompare(compares, products = {}) {
-  const productList = compares.map(c => products[c.productId]).filter(Boolean);
-  
-  meta.textContent = `共 ${productList.length} 件商品`;
+function getCurrentUserId() {
+  const user = getUserInfo();
+  return user?.userId || user?.username || '';
+}
 
-  if (!productList.length) {
-    content.innerHTML = '<div class="empty-state">对比列表为空，去商品详情页添加商品吧！</div>';
+function getMinPrice(product) {
+  const prices = (product.items || []).map((item) => Number(item.listPrice)).filter((price) => Number.isFinite(price));
+  return prices.length ? Math.min(...prices) : null;
+}
+
+function renderCompare(entries) {
+  compareEntries = entries;
+  meta.textContent = `共 ${entries.length} 件商品`;
+  clearButton.disabled = entries.length === 0;
+
+  if (!entries.length) {
+    content.innerHTML = '<div class="empty-state">对比列表为空，先去商品详情页添加商品。</div>';
     return;
   }
 
-  const attributes = [
-    { key: 'categoryId', label: '分类' },
-    { key: 'description', label: '描述' },
-    { key: 'price', label: '价格' },
+  const prices = entries.map(({ product }) => getMinPrice(product)).filter((price) => price !== null);
+  const minPrice = prices.length ? Math.min(...prices) : null;
+  const maxPrice = prices.length ? Math.max(...prices) : null;
+
+  const rows = [
+    {
+      label: '分类',
+      render(product) {
+        return escapeHtml(product.categoryId || '-');
+      },
+    },
+    {
+      label: '描述',
+      render(product) {
+        return escapeHtml(stripHtml(product.description) || '-');
+      },
+    },
+    {
+      label: '最低价格',
+      render(product) {
+        const price = getMinPrice(product);
+        if (price === null) return '-';
+        return formatPrice(price);
+      },
+      valueClass(product) {
+        const price = getMinPrice(product);
+        if (price === null || minPrice === maxPrice) return '';
+        if (price === minPrice) return ' compare-value--best';
+        if (price === maxPrice) return ' compare-value--high';
+        return '';
+      },
+    },
+    {
+      label: 'SKU 数量',
+      render(product) {
+        return `${(product.items || []).length}`;
+      },
+    },
   ];
 
-  const prices = productList.map(product => {
-    const items = product.items || [];
-    if (items.length === 0) return null;
-    const itemPrices = items.map(item => item.listPrice).filter(price => price != null);
-    if (itemPrices.length === 0) return null;
-    return Math.min(...itemPrices);
-  }).filter(p => p != null);
-
-  const minPrice = prices.length > 0 ? Math.min(...prices) : null;
-  const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
-
-  content.innerHTML = `
-    <div class="compare-table-wrap">
-      <table class="table compare-table">
-        <thead>
-          <tr>
-            <th>属性</th>
-            ${productList.map((product, index) => `
-              <th>
-                <button class="btn btn-sm btn-outline compare-remove" type="button" data-remove-compare="${compares[index].id}" data-product-id="${product.productId}">
-                  ×
-                </button>
-                <h3>${product.name}</h3>
-              </th>
-            `).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${attributes.map(attr => `
-            <tr>
-              <td class="compare-attr-label">${attr.label}</td>
-              ${productList.map(product => {
-                let value;
-                let className = '';
-                
-                if (attr.key === 'description') {
-                  value = stripHtmlTags(product.description) || '-';
-                } else if (attr.key === 'price') {
-                  const items = product.items || [];
-                  if (items.length > 0) {
-                    const itemPrices = items.map(item => item.listPrice).filter(price => price != null);
-                    if (itemPrices.length > 0) {
-                      const price = Math.min(...itemPrices);
-                      value = formatPrice(price);
-                      if (minPrice !== null && price === minPrice) {
-                        className = 'price-low';
-                      } else if (maxPrice !== null && price === maxPrice) {
-                        className = 'price-high';
-                      }
-                    } else {
-                      value = '-';
-                    }
-                  } else {
-                    value = '-';
-                  }
-                } else {
-                  value = product[attr.key] || '-';
-                }
-                return `<td class="compare-value ${className}">${value}</td>`;
-              }).join('')}
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
+  content.innerHTML = `<div class="compare-table-wrap">
+    <table class="table compare-table">
+      <thead>
+        <tr>
+          <th>项目</th>
+          ${entries
+            .map(
+              ({ compare, product }) => `<th>
+                <div class="compare-product-head">
+                  <span class="badge">${escapeHtml(product.categoryId || 'Catalog')}</span>
+                  <h2>${escapeHtml(product.name || product.productId)}</h2>
+                  <a class="compare-product-link" href="/product.html?productId=${encodeURIComponent(product.productId)}">查看详情</a>
+                  <button class="btn btn-danger compare-remove" type="button" data-remove-compare="${escapeHtml(compare.id)}">移除</button>
+                </div>
+              </th>`,
+            )
+            .join('')}
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (row) => `<tr>
+              <th scope="row">${row.label}</th>
+              ${entries
+                .map(({ product }) => `<td class="compare-value${row.valueClass?.(product) || ''}">${row.render(product)}</td>`)
+                .join('')}
+            </tr>`,
+          )
+          .join('')}
+      </tbody>
+    </table>
+  </div>`;
 }
 
-let comparesData = [];
-let productsData = {};
+async function loadCompareList() {
+  const userId = getCurrentUserId();
+  if (!userId) {
+    showNotice(notice, '用户信息不完整，请重新登录后再试', 'error');
+    content.innerHTML = '<div class="empty-state">无法读取当前用户信息</div>';
+    return;
+  }
 
-async function loadCompares() {
-  content.innerHTML = '<div class="empty-state">正在加载对比列表...</div>';
+  content.innerHTML = '<div class="empty-state">正在加载商品对比...</div>';
+  clearButton.disabled = true;
+
   try {
-    const user = getUserInfo();
-    const result = await api.compares.getByUser(user.username);
-    comparesData = result.compares || [];
-    
-    const productIds = [...new Set(comparesData.map(c => c.productId))];
-    const productPromises = productIds.map(id => 
-      api.get(`/catalog/products/${encodeURIComponent(id)}`).catch(() => null)
+    const result = await api.compares.getByUser(userId);
+    const compares = result?.compares || [];
+    const productResults = await Promise.all(
+      compares.map((compare) =>
+        api
+          .get(`/catalog/products/${encodeURIComponent(compare.productId)}`)
+          .then((product) => ({ compare, product }))
+          .catch(() => null),
+      ),
     );
-    const products = await Promise.all(productPromises);
-    
-    productsData = {};
-    products.forEach(p => {
-      if (p) productsData[p.productId] = p;
-    });
-    
-    renderCompare(comparesData, productsData);
+
+    renderCompare(productResults.filter(Boolean));
   } catch (error) {
-    console.error('Failed to load compares:', error);
-    content.innerHTML = '<div class="empty-state">对比列表加载失败</div>';
+    showNotice(notice, error.message, 'error');
+    content.innerHTML = '<div class="empty-state">商品对比加载失败</div>';
   }
 }
 
@@ -147,27 +158,34 @@ content.addEventListener('click', async (event) => {
   const button = event.target.closest('[data-remove-compare]');
   if (!button) return;
 
-  setLoading(button, true, '删除中...');
+  setLoading(button, true, '移除中...');
   try {
-    const compareId = parseInt(button.dataset.removeCompare, 10);
-    await api.compares.remove(compareId);
-    showNotice(notice, '已从对比中移除', 'success');
-    await loadCompares();
+    await api.compares.remove(button.dataset.removeCompare);
+    showNotice(notice, '已移出商品对比', 'success');
+    await loadCompareList();
   } catch (error) {
     showNotice(notice, error.message, 'error');
   } finally {
     setLoading(button, false);
+    clearButton.disabled = compareEntries.length === 0;
   }
 });
 
-qs('[data-clear-compare]').addEventListener('click', async () => {
-  const button = event.target;
+clearButton.addEventListener('click', async (event) => {
+  if (!compareEntries.length) return;
+
+  const userId = getCurrentUserId();
+  if (!userId) {
+    showNotice(notice, '用户信息不完整，请重新登录后再试', 'error');
+    return;
+  }
+
+  const button = event.currentTarget;
   setLoading(button, true, '清空中...');
   try {
-    const user = getUserInfo();
-    await api.compares.clear(user.username);
+    await api.compares.clear(userId);
     showNotice(notice, '对比列表已清空', 'success');
-    await loadCompares();
+    await loadCompareList();
   } catch (error) {
     showNotice(notice, error.message, 'error');
   } finally {
@@ -175,4 +193,6 @@ qs('[data-clear-compare]').addEventListener('click', async () => {
   }
 });
 
-loadCompares();
+if (requireAuth()) {
+  loadCompareList();
+}

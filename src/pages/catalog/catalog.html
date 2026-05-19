@@ -1,0 +1,89 @@
+<!doctype html>
+<html class="animal-cursor" lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>商品列表 - MyPetStore</title>
+    <script>
+      (() => {
+        try {
+          if (sessionStorage.getItem('mypetstore:island-store-transition') === 'catalog') {
+            document.documentElement.classList.add('store-transition-boot');
+          }
+        } catch (error) {
+          // Keep the page usable if session storage is unavailable.
+        }
+      })();
+    </script>
+    <style>
+      html.store-transition-boot,
+      html.store-transition-boot body {
+        background: #000000;
+      }
+
+      html.store-transition-boot body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: #000000;
+      }
+    </style>
+  </head>
+  <body class="animal-cursor">
+    <div class="site-shell animal-cursor" data-app-shell>
+      <main class="main">
+        <div class="container">
+          <section class="catalog-carousel" data-carousel aria-label="宠物商店活动轮播">
+            <div class="catalog-carousel__viewport">
+              <div class="catalog-carousel__track" data-carousel-track></div>
+              <button class="catalog-carousel__control catalog-carousel__control--prev" type="button" data-carousel-prev aria-label="上一张活动海报">
+                <span aria-hidden="true">‹</span>
+              </button>
+              <button class="catalog-carousel__control catalog-carousel__control--next" type="button" data-carousel-next aria-label="下一张活动海报">
+                <span aria-hidden="true">›</span>
+              </button>
+              <div class="catalog-carousel__dots" data-carousel-dots aria-label="选择活动海报"></div>
+            </div>
+          </section>
+          <section class="catalog-hero">
+            <div class="catalog-hero__copy">
+              <span class="catalog-kicker">Nook-style pet market</span>
+              <h1>宠物商品目录</h1>
+              <p>按分类浏览商品，或直接搜索你需要的宠物用品。</p>
+            </div>
+            <div class="catalog-hero__mascot" aria-hidden="true"></div>
+            <form class="catalog-search" data-search-form>
+              <label class="sr-only" for="catalog-keyword">搜索商品关键词</label>
+              <input id="catalog-keyword" class="form-control" name="keyword" type="search" placeholder="搜索商品关键词" />
+              <button class="btn btn-primary" type="submit">搜索</button>
+            </form>
+          </section>
+          <div class="notice" data-notice></div>
+          <section class="catalog-layout">
+            <aside class="panel catalog-sidebar">
+              <div class="panel__header">
+                <h2>分类</h2>
+                <span>Choose an island</span>
+              </div>
+              <div class="catalog-categories" data-category-list></div>
+            </aside>
+            <section class="catalog-results">
+              <div class="page-head">
+                <div>
+                  <h2 data-list-title>全部商品</h2>
+                  <p data-list-meta>正在加载商品...</p>
+                </div>
+                <div class="page-head__actions">
+                  <button class="btn btn-secondary" type="button" data-prev-page>上一页</button>
+                  <button class="btn btn-secondary" type="button" data-next-page>下一页</button>
+                </div>
+              </div>
+              <div class="product-grid" data-product-list></div>
+            </section>
+          </section>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

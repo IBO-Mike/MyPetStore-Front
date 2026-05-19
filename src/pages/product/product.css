@@ -8,9 +8,18 @@
 }
 
 .product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+  border-top: 2px solid rgba(232, 220, 200, 0.72);
+}
+
+.product-action--active {
+  border-color: #95ded6;
+  background: #e6f9f6;
+  color: #0a827a;
 }
 
 .sku-list {
