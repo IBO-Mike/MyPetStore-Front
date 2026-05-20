@@ -47,6 +47,7 @@ async function parseResponse(response) {
 async function request(path, options = {}) {
   const { method = 'GET', data, params, headers = {} } = options;
   const token = getToken();
+  const isLoginRequest = path === '/auth/sign-in';
   const requestHeaders = {
     Accept: 'application/json',
     ...headers,
@@ -70,7 +71,7 @@ async function request(path, options = {}) {
   const payload = await parseResponse(response);
   const apiCode = payload?.code ?? response.status;
 
-  if (apiCode === 401 || response.status === 401) {
+  if ((apiCode === 401 || response.status === 401) && !isLoginRequest) {
     localStorage.removeItem(TOKEN_KEY);
     const redirect = encodeURIComponent(`${window.location.pathname}${window.location.search}`);
     window.location.href = `/login.html?redirect=${redirect}`;

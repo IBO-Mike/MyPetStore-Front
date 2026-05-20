@@ -336,11 +336,16 @@ form?.addEventListener('submit', async (event) => {
     } catch {
       // Session storage can be unavailable in strict privacy modes.
     }
-    window.location.replace(loginSuccessUrl);
+    setLoading(button, true, '登录成功');
+    window.setTimeout(() => {
+      window.location.replace(loginSuccessUrl);
+    }, 250);
   } catch (error) {
     passwordInput?.classList.add('is-invalid');
     showError(error.message || '用户名或密码不正确，请重试。');
   } finally {
-    setLoading(button, false);
+    if (!localStorage.getItem('mypetstore_token')) {
+      setLoading(button, false);
+    }
   }
 });
