@@ -8,7 +8,7 @@ import { isLoggedIn, logout, getUserInfo } from './auth';
 const syncAnimalCursor = installAnimalCursor();
 
 const navItems = [
-  { href: '/', label: '首页' },
+  { href: '/catalog.html', label: '首页' },
   { href: '/catalog.html', label: '商品列表' },
   { href: '/cart.html', label: '购物车', auth: true },
   { href: '/favorites.html', label: '我的收藏', auth: true },
@@ -21,8 +21,8 @@ const navItems = [
 
 function isActive(href) {
   const current = window.location.pathname;
-  if (href === '/') {
-    return current === '/' || current.endsWith('/index.html');
+  if (href === '/catalog.html') {
+    return current === '/' || current.endsWith('/index.html') || current.endsWith('/catalog.html');
   }
   return current.endsWith(href);
 }
@@ -54,7 +54,7 @@ export function renderLayout(activeLabel = '') {
     `<header class="site-header">
       <div class="container site-header__inner">
         <div class="site-brand-group">
-          <a class="site-header__brand" href="/">MyPetStore</a>
+          <a class="site-header__brand" href="/catalog.html">MyPetStore</a>
           <div class="site-time" aria-label="当前时间" data-site-time></div>
         </div>
         <nav class="site-nav" aria-label="主导航">
