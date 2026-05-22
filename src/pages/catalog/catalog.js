@@ -41,6 +41,8 @@ const carouselTrack = qs('[data-carousel-track]');
 const carouselDots = qs('[data-carousel-dots]');
 const carouselPrev = qs('[data-carousel-prev]');
 const carouselNext = qs('[data-carousel-next]');
+const searchForm = qs('[data-search-form]');
+const searchInput = qs('#catalog-keyword');
 
 const categoryMeta = {
   BIRDS: { icon: birdsIcon, banner: birdsBanner, label: 'Birds' },
@@ -320,7 +322,6 @@ async function loadProducts() {
       listTitle.textContent = `搜索：${state.keyword}`;
       result = await api.get('/catalog/search', {
         keyword: state.keyword,
-        categoryId: state.categoryId,
         page: state.page,
         pageSize: state.pageSize,
       });
@@ -347,13 +348,22 @@ categoryList.addEventListener('click', (event) => {
   categoryList.querySelectorAll('.catalog-category').forEach((item) => item.classList.remove('is-active'));
   button.classList.add('is-active');
   state.categoryId = button.dataset.category;
+  state.keyword = '';
+  if (searchInput) {
+    searchInput.value = '';
+  }
   state.page = 1;
   loadProducts();
 });
 
-qs('[data-search-form]').addEventListener('submit', (event) => {
+searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
-  state.keyword = new FormData(event.currentTarget).get('keyword').trim();
+  const keyword = String(new FormData(event.currentTarget).get('keyword') || '').trim();
+  state.keyword = keyword;
+  if (keyword) {
+    state.categoryId = '';
+    categoryList.querySelectorAll('.catalog-category').forEach((item) => item.classList.remove('is-active'));
+  }
   state.page = 1;
   loadProducts();
 });

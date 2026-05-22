@@ -186,3 +186,4 @@ content.addEventListener('click', async (event) => {
 if (requireAuth()) {
   loadFavorites();
 }
+
